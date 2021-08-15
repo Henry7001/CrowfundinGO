@@ -17,7 +17,7 @@ public class menuprinc extends javax.swing.JFrame {
         return retValue;
     }
 
-    //Login login = new Login();
+    buscaproye bp = new buscaproye();
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -63,6 +63,11 @@ public class menuprinc extends javax.swing.JFrame {
         inversionistas.setText("Menú de Inversionista");
 
         busproy.setText("Buscar Proyecto");
+        busproy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                busproyActionPerformed(evt);
+            }
+        });
         inversionistas.add(busproy);
 
         vertransac.setText("Verificar transacciones");
@@ -145,6 +150,10 @@ public class menuprinc extends javax.swing.JFrame {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         JOptionPane.showMessageDialog(null, "Sesión iniciada");
     }//GEN-LAST:event_formWindowOpened
+
+    private void busproyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_busproyActionPerformed
+        bp.show(true);
+    }//GEN-LAST:event_busproyActionPerformed
 
     /**
      * @param args the command line arguments

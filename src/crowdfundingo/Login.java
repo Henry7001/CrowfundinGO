@@ -24,13 +24,13 @@ public class Login extends javax.swing.JFrame {
         setIconImage(getIconImage());
     }
     
-    crearcuenta crea = new crearcuenta();
-    menuprinc prin = new menuprinc();
-    
     public Image getIconImage(){
         Image retValue=Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("res/ico.png"));
         return retValue;
     }
+    
+    crearcuenta crea = new crearcuenta();
+    menuprinc prin = new menuprinc();
     
     public void validar(){
         if("".equals(user.getText())){
@@ -212,6 +212,7 @@ public class Login extends javax.swing.JFrame {
          */
         try {
             UIManager.setLookAndFeel("com.jtattoo.plaf.mcwin.McWinLookAndFeel");
+            //UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {

@@ -5,8 +5,11 @@
  */
 package crowdfundingo;
 
-import java.awt.Image;
-import java.awt.Toolkit;
+import java.awt.*;
+import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.proteanit.sql.DbUtils;
 
 /**
  *
@@ -22,11 +25,22 @@ public class buscaproye extends javax.swing.JFrame {
         setIconImage(getIconImage());
     }
     
+    @Override
     public Image getIconImage(){
         Image retValue=Toolkit.getDefaultToolkit().getImage(ClassLoader.getSystemResource("res/ico.png"));
         return retValue;
     }
 
+    public void llenarTablaProy(String titulo) throws SQLException {
+        Connection con = DriverManager.getConnection("jdbc:derby://localhost:1527/sample;create=true;user=app;password=app");
+        con.setSchema("APP");
+        Statement s = con.createStatement();
+        s.executeQuery("SELECT ID, TITULO, LEMA, ESTADO_PROYECTO FROM PROYECTO WHERE TITULO='" + titulo + "'");
+        ResultSet rs = s.getResultSet();
+        System.out.println(rs);
+        ProyTables.setModel(DbUtils.resultSetToTableModel(rs));
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -37,7 +51,7 @@ public class buscaproye extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        ProyTables = new javax.swing.JTable();
         lblenun = new javax.swing.JLabel();
         proys = new javax.swing.JTextField();
         buscar = new javax.swing.JButton();
@@ -45,8 +59,11 @@ public class buscaproye extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Buscar proyectos");
+        setResizable(false);
+        setType(java.awt.Window.Type.POPUP);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        ProyTables.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -54,7 +71,7 @@ public class buscaproye extends javax.swing.JFrame {
                 {null, null, null, null, null}
             },
             new String [] {
-                "ID", "Título ", "Lema", "Destinatario", "País"
+                "ID", "Título ", "Lema", "País", "Estado"
             }
         ) {
             Class[] types = new Class [] {
@@ -72,18 +89,25 @@ public class buscaproye extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setColumnSelectionAllowed(true);
-        jTable1.setDoubleBuffered(true);
-        jTable1.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(jTable1);
-        jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-        }
+        ProyTables.setColumnSelectionAllowed(true);
+        ProyTables.setDoubleBuffered(true);
+        ProyTables.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(ProyTables);
+        ProyTables.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 45, 675, -1));
 
         lblenun.setText("Escriba el Titulo de la campaña:");
+        getContentPane().add(lblenun, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 15, -1, -1));
+        getContentPane().add(proys, new org.netbeans.lib.awtextra.AbsoluteConstraints(164, 12, 450, -1));
 
         buscar.setText("Buscar");
+        buscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buscarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 11, -1, -1));
 
         salir.setText("Salir");
         salir.addActionListener(new java.awt.event.ActionListener() {
@@ -91,40 +115,7 @@ public class buscaproye extends javax.swing.JFrame {
                 salirActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 675, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblenun)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(proys)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buscar))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(salir)))
-                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblenun)
-                    .addComponent(proys, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buscar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(salir)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        getContentPane().add(salir, new org.netbeans.lib.awtextra.AbsoluteConstraints(632, 478, -1, -1));
 
         pack();
         setLocationRelativeTo(null);
@@ -133,6 +124,14 @@ public class buscaproye extends javax.swing.JFrame {
     private void salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirActionPerformed
         this.dispose();
     }//GEN-LAST:event_salirActionPerformed
+
+    private void buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarActionPerformed
+        try {
+            llenarTablaProy(proys.getText());
+        } catch (SQLException ex) {
+            Logger.getLogger(buscaproye.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_buscarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -170,9 +169,9 @@ public class buscaproye extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable ProyTables;
     private javax.swing.JButton buscar;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblenun;
     private javax.swing.JTextField proys;
     private javax.swing.JButton salir;
